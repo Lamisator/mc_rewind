@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "rewind",
+	"version": "${version}",
+	"name": "Rewind",
+	"description": "World snapshots: save the whole world (with every mod's data) under a name and go back to it, or to any other snapshot, whenever you like. Incremental, taken in the background, with automatic snapshots and a safety copy before every restore.",
+	"authors": ["Marius Kloeck"],
+	"license": "MIT",
+	"icon": "assets/rewind/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["net.antwire.rewind.Rewind"],
+		"client": ["net.antwire.rewind.client.RewindClient"],
+		"preLaunch": ["net.antwire.rewind.RewindPreLaunch"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

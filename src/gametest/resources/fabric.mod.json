@@ -1,0 +1,10 @@
+{
+	"schemaVersion": 1,
+	"id": "rewind-gametest",
+	"version": "1.0.0",
+	"name": "Rewind tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": ["net.antwire.rewind.gametest.RewindTour"]
+	}
+}
