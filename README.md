@@ -4,6 +4,7 @@ World snapshots for **Minecraft 26.3** (Fabric). Save the whole world under a na
 or to any other snapshot, whenever you like. Works in singleplayer, on LAN and on dedicated servers.
 
 Online handbook: https://mchamradio.antwire.net/handbook/rewind/
+Source code: [github.com/Lamisator/mc_rewind](https://github.com/Lamisator/mc_rewind)
 
 ![The snapshot screen from the pause menu](docs/img/rewind_screen.png)
 
