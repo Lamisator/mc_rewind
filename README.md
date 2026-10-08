@@ -15,13 +15,20 @@ inventory and position, and the data other mods keep with the world (Gridworks' 
 sources and emitters, Ham Radio's callsigns and logbooks, Fission's reactors). Going back to a snapshot
 puts all of that back exactly as it was.
 
+**Every map, always.** A snapshot holds every map (dimension) of the world: the overworld, the Nether,
+the End, and every world a multiverse mod such as [Worlds](https://modrinth.com/mod/mc-worlds) adds, including
+ones created after Rewind was installed. They all live in the world folder (`dimensions/<namespace>/<name>/`), and
+Rewind copies the whole folder, so a new map needs no setup. Saving pauses for every map while the files are
+copied, also for a map that is created or woken up during the copy. `/snapshot info <name>` lists the maps a
+snapshot holds, and the chat says how many when it is saved. Restoring brings back all maps together, as they were.
+
 Mod jars and configuration files are not part of a world, so they are not in snapshots either.
 
 ## Installing
 
 1. In Prism Launcher, make a Minecraft **26.3** instance with **Fabric** (loader 0.19.5 or newer), and
    install **Fabric API**.
-2. **Add file**: `rewind-1.0.0.jar`.
+2. **Add file**: `rewind-1.1.0.jar`.
 
 On a server, put the jar into the server's `mods` folder. Players only need it on their side for the
 pause-menu screen; the `/snapshot` command works without it.
@@ -105,7 +112,7 @@ Snapshots stay when a world is restored, and they belong to the world folder's n
 ## Building from source
 
 ```
-./gradlew build             # build/libs/rewind-1.0.0.jar
+./gradlew build             # build/libs/rewind-1.1.0.jar
 ./gradlew runClientGameTest # takes, changes, restores and un-restores a test world
 ```
 

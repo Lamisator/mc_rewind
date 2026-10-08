@@ -2,7 +2,7 @@
   "rewind.busy": "A snapshot is being taken or restored right now - try again in a moment",
   "rewind.bad_name": "\"%s\" is not a valid snapshot name (letters, digits and _ . + -, up to 48)",
   "rewind.saving": "Taking snapshot %s ...",
-  "rewind.saved": "Snapshot %s saved: %s (%s new) in %s s",
+  "rewind.saved": "Snapshot %s saved: %s maps, %s (%s new) in %s s",
   "rewind.failed": "Snapshot %s failed: %s",
   "rewind.unknown": "There is no snapshot called %s",
   "rewind.deleted": "Snapshot %s deleted",

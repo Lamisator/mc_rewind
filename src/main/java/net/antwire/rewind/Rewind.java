@@ -258,9 +258,10 @@ public class Rewind implements ModInitializer {
 			c.getSource().sendFailure(Component.translatable("rewind.unknown", name));
 			return 0;
 		}
-		String text = String.format(java.util.Locale.ROOT, "%s (%s)%n  taken %s by %s, day %d%n  %d files, %s (%s new)%n  %s%n  mods: %s",
+		String text = String.format(java.util.Locale.ROOT, "%s (%s)%n  taken %s by %s, day %d%n  %d files, %s (%s new)%n  %s%n  maps: %s%n  mods: %s",
 				x.name, x.kind, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(x.created)), x.createdBy, x.gameTime / 24000,
-				x.files, SnapshotStore.size(x.bytes), SnapshotStore.size(x.newBytes), x.description, String.join(", ", x.mods));
+				x.files, SnapshotStore.size(x.bytes), SnapshotStore.size(x.newBytes), x.description,
+				x.maps == null || x.maps.isEmpty() ? "(not recorded)" : String.join(", ", x.maps), String.join(", ", x.mods));
 		c.getSource().sendSuccess(() -> Component.literal(text), false);
 		return 1;
 	}

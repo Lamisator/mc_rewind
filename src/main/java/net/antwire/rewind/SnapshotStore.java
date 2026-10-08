@@ -53,6 +53,14 @@ public final class SnapshotStore {
 		/** Bytes actually written for this snapshot (the rest is shared with the one before). */
 		public long newBytes;
 		public List<String> mods = new ArrayList<>();
+		/** Every map (dimension) in the snapshot, e.g. minecraft:overworld or a multiverse world. */
+		public List<String> maps = new ArrayList<>();
+	}
+
+	/** The map a world-folder path belongs to ({@code dimensions/<namespace>/<name>/...}), or null. */
+	public static String mapOf(String rel) {
+		String[] p = rel.split("/");
+		return p.length >= 4 && p[0].equals("dimensions") ? p[1] + ":" + p[2] : null;
 	}
 
 	public static class Pending {
@@ -190,6 +198,7 @@ public final class SnapshotStore {
 		meta.files = stats[0];
 		meta.bytes = stats[1];
 		meta.newBytes = stats[2];
+		meta.maps = manifest.keySet().stream().map(SnapshotStore::mapOf).filter(java.util.Objects::nonNull).distinct().sorted().toList();
 		write(partial.resolve(MANIFEST), manifest);
 		write(partial.resolve(META), meta);
 		deleteTree(target);

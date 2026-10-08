@@ -31,6 +31,8 @@ public final class SnapshotManager {
 	private long ticks;
 	/** Set when this server is shutting down for a restore. */
 	private volatile boolean restoring;
+	/** Maps whose saving is paused while a snapshot is being copied. */
+	private final List<ServerLevel> paused = new ArrayList<>();
 
 	private SnapshotManager(MinecraftServer server) {
 		this.server = server;
@@ -47,6 +49,7 @@ public final class SnapshotManager {
 	public static @Nullable SnapshotManager get() {
 		return instance;
 	}
+
 
 	public Path world() {
 		return this.server.getWorldPath(LevelResource.ROOT).toAbsolutePath().normalize();
@@ -93,11 +96,12 @@ public final class SnapshotManager {
 		reply.accept(Component.translatable("rewind.saving", name).withStyle(ChatFormatting.GRAY));
 		// a full save first, then no more writes until the copy is done
 		this.server.saveEverything(true, true, true);
-		List<ServerLevel> paused = new ArrayList<>();
+		// every map the server has - the overworld, nether, end and any multiverse world - is in the world folder
+		this.paused.clear();
 		for (ServerLevel level : this.server.getAllLevels()) {
 			if (!level.noSave) {
 				level.noSave = true;
-				paused.add(level);
+				this.paused.add(level);
 			}
 		}
 		SnapshotStore.Meta meta = new SnapshotStore.Meta();
@@ -123,10 +127,10 @@ public final class SnapshotManager {
 				java.nio.file.Files.createDirectories(root);
 				SnapshotStore.Meta done = SnapshotStore.create(world, root, meta, previous);
 				double secs = (System.currentTimeMillis() - start) / 1000.0;
-				result = Component.translatable("rewind.saved", name, SnapshotStore.size(done.bytes), SnapshotStore.size(done.newBytes),
+				result = Component.translatable("rewind.saved", name, done.maps.size(), SnapshotStore.size(done.bytes), SnapshotStore.size(done.newBytes),
 						String.format(java.util.Locale.ROOT, "%.1f", secs)).withStyle(ChatFormatting.GREEN);
-				Rewind.LOGGER.info("Snapshot {} saved: {} files, {} ({} new) in {} s", name, done.files, SnapshotStore.size(done.bytes),
-						SnapshotStore.size(done.newBytes), secs);
+				Rewind.LOGGER.info("Snapshot {} saved: {} files, {} ({} new) in {} s; maps: {}", name, done.files, SnapshotStore.size(done.bytes),
+						SnapshotStore.size(done.newBytes), secs, String.join(", ", done.maps));
 				if ("auto".equals(kind)) {
 					SnapshotStore.prune(root, "auto", RewindConfig.get().autoKeep);
 				}
@@ -136,9 +140,10 @@ public final class SnapshotManager {
 			}
 			Component r = result;
 			this.server.execute(() -> {
-				for (ServerLevel level : paused) {
+				for (ServerLevel level : this.paused) {
 					level.noSave = false;
 				}
+				this.paused.clear();
 				this.busy = false;
 				reply.accept(r);
 				this.broadcastList();
@@ -150,6 +155,16 @@ public final class SnapshotManager {
 	}
 
 	public void tick() {
+		if (this.busy) {
+			// a map that appears while a snapshot is being copied (a multiverse world created or loaded) must not
+			// write into the copy either; it is paused like the others and resumes with them
+			for (ServerLevel level : this.server.getAllLevels()) {
+				if (!level.noSave && !this.paused.contains(level)) {
+					level.noSave = true;
+					this.paused.add(level);
+				}
+			}
+		}
 		int minutes = RewindConfig.get().autoIntervalMinutes;
 		if (minutes <= 0 || ++this.ticks % (minutes * 1200L) != 0 || this.busy) {
 			return;
