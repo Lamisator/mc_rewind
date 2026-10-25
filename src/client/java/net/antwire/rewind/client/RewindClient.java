@@ -32,6 +32,7 @@ public class RewindClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		AutoLanguage.apply();
 		ClientPlayNetworking.registerGlobalReceiver(RewindPayloads.ListReply.TYPE, (p, ctx) -> ctx.client().execute(() -> SnapshotScreen.receive(p)));
 		// packet handlers do not run on the client thread: hand the work over
 		ClientPlayNetworking.registerGlobalReceiver(RewindPayloads.RestoreNow.TYPE, (p, ctx) -> ctx.client().execute(() -> {

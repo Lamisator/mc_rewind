@@ -125,7 +125,7 @@ public class SnapshotScreen extends Screen {
 				default -> 0xFFE8ECF0;
 			};
 			g.text(this.font, e.name(), x + 14, ry + 3, color, false);
-			String sub = f.format(new Date(e.created())) + "  " + SnapshotStore.size(e.bytes()) + (e.description().isEmpty() ? "" : "  " + e.description());
+			String sub = f.format(new Date(e.created())) + "  " + SnapshotStore.size(e.bytes()) + (e.description().isEmpty() ? "" : "  " + SnapshotStore.describe(e.kind(), e.description()).getString());
 			g.pose().pushMatrix();
 			g.pose().translate(x + 14, ry + 13);
 			g.pose().scale(0.75F, 0.75F);

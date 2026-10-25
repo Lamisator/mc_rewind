@@ -197,7 +197,7 @@ public class Rewind implements ModInitializer {
 	private static SnapshotManager manager(CommandContext<CommandSourceStack> c) {
 		SnapshotManager m = SnapshotManager.get();
 		if (m == null) {
-			c.getSource().sendFailure(Component.literal("Rewind is not running"));
+			c.getSource().sendFailure(Component.translatable("rewind.not_running"));
 		}
 		return m;
 	}
@@ -231,9 +231,9 @@ public class Rewind implements ModInitializer {
 			MutableComponent line = Component.literal(" " + x.name).withStyle(kindColor(x.kind))
 					.append(Component.literal("  " + f.format(new Date(x.created)) + "  " + SnapshotStore.size(x.bytes)).withStyle(ChatFormatting.GRAY));
 			if (!x.description.isEmpty()) {
-				line.append(Component.literal("  " + x.description).withStyle(ChatFormatting.DARK_GRAY));
+				line.append(Component.literal("  ").append(SnapshotStore.describe(x.kind, x.description)).withStyle(ChatFormatting.DARK_GRAY));
 			}
-			line.append(Component.literal("  [restore]").withStyle(s2 -> s2.withColor(ChatFormatting.AQUA)
+			line.append(Component.literal("  [").append(Component.translatable("rewind.list_restore")).append("]").withStyle(s2 -> s2.withColor(ChatFormatting.AQUA)
 					.withClickEvent(new ClickEvent.SuggestCommand("/snapshot restore " + x.name))
 					.withHoverEvent(new HoverEvent.ShowText(Component.translatable("rewind.click_restore")))));
 			s.sendSuccess(() -> line, false);
@@ -258,11 +258,12 @@ public class Rewind implements ModInitializer {
 			c.getSource().sendFailure(Component.translatable("rewind.unknown", name));
 			return 0;
 		}
-		String text = String.format(java.util.Locale.ROOT, "%s (%s)%n  taken %s by %s, day %d%n  %d files, %s (%s new)%n  %s%n  maps: %s%n  mods: %s",
-				x.name, x.kind, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(x.created)), x.createdBy, x.gameTime / 24000,
-				x.files, SnapshotStore.size(x.bytes), SnapshotStore.size(x.newBytes), x.description,
-				x.maps == null || x.maps.isEmpty() ? "(not recorded)" : String.join(", ", x.maps), String.join(", ", x.mods));
-		c.getSource().sendSuccess(() -> Component.literal(text), false);
+		Component text = Component.translatable("rewind.info", x.name, SnapshotStore.kindName(x.kind),
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(x.created)), x.createdBy, String.valueOf(x.gameTime / 24000),
+				String.valueOf(x.files), SnapshotStore.size(x.bytes), SnapshotStore.size(x.newBytes), SnapshotStore.describe(x.kind, x.description),
+				x.maps == null || x.maps.isEmpty() ? Component.translatable("rewind.info.no_maps") : Component.literal(String.join(", ", x.maps)),
+				String.join(", ", x.mods));
+		c.getSource().sendSuccess(() -> text, false);
 		return 1;
 	}
 
@@ -276,7 +277,7 @@ public class Rewind implements ModInitializer {
 		}
 		String cmd = "/snapshot " + what + " " + name + " confirm";
 		c.getSource().sendSuccess(() -> Component.translatable("rewind.confirm_" + what, name).withStyle(ChatFormatting.GOLD)
-				.append(Component.literal(" [" + Component.translatable("rewind.confirm").getString() + "]").withStyle(s -> s.withColor(ChatFormatting.RED)
+				.append(Component.literal(" [").append(Component.translatable("rewind.confirm")).append("]").withStyle(s -> s.withColor(ChatFormatting.RED)
 						.withBold(true).withClickEvent(new ClickEvent.RunCommand(cmd)).withHoverEvent(new HoverEvent.ShowText(Component.literal(cmd))))), false);
 		return 1;
 	}

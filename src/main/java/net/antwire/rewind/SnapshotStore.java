@@ -360,6 +360,29 @@ public final class SnapshotStore {
 		});
 	}
 
+	/** Default descriptions the mod writes into snapshot.json (in English); shown translated. */
+	public static final String AUTO_DESCRIPTION = "Automatic snapshot";
+	private static final java.util.regex.Pattern BEFORE_RESTORE = java.util.regex.Pattern.compile("The world as it was before snapshot (.+) was restored");
+
+	/** The description of a snapshot for players: the mod's own default texts become translations, anything typed in stays as it is. */
+	public static net.minecraft.network.chat.MutableComponent describe(String kind, String description) {
+		if ("auto".equals(kind) && AUTO_DESCRIPTION.equals(description)) {
+			return net.minecraft.network.chat.Component.translatable("rewind.description.auto");
+		}
+		if ("before-restore".equals(kind) && description != null) {
+			java.util.regex.Matcher m = BEFORE_RESTORE.matcher(description);
+			if (m.matches()) {
+				return net.minecraft.network.chat.Component.translatable("rewind.description.before_restore", m.group(1));
+			}
+		}
+		return net.minecraft.network.chat.Component.literal(description == null ? "" : description);
+	}
+
+	/** The kind of a snapshot (manual, auto, before-restore) for players. */
+	public static net.minecraft.network.chat.MutableComponent kindName(String kind) {
+		return net.minecraft.network.chat.Component.translatableWithFallback("rewind.kind." + kind.replace('-', '_'), kind);
+	}
+
 	public static String size(long bytes) {
 		if (bytes >= 1L << 30) return String.format(java.util.Locale.ROOT, "%.2f GB", bytes / (double) (1L << 30));
 		if (bytes >= 1L << 20) return String.format(java.util.Locale.ROOT, "%.1f MB", bytes / (double) (1L << 20));

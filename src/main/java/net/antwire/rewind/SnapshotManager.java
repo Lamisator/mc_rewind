@@ -169,7 +169,7 @@ public final class SnapshotManager {
 		if (minutes <= 0 || ++this.ticks % (minutes * 1200L) != 0 || this.busy) {
 			return;
 		}
-		this.save("auto-" + timestamp(), "auto", "Automatic snapshot", "server", c -> Rewind.LOGGER.info(c.getString()));
+		this.save("auto-" + timestamp(), "auto", SnapshotStore.AUTO_DESCRIPTION, "server", c -> Rewind.LOGGER.info(c.getString()));
 	}
 
 	// ------------------------------------------------------------------ deleting
