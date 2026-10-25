@@ -39,7 +39,7 @@ Bildschirm im Pausenmenü; der Befehl `/snapshot` funktioniert auch ohne sie.
 ## Einen Snapshot erstellen
 
 - **Pausenmenü → Snapshots** (unten links): Gib einen Namen und eine Beschreibung ein (beides optional) und drück
-  **Jetzt speichern**.
+  **Speichern**.
 - Oder per Befehl: `/snapshot save [name] [description]`. Ohne Namen heißt er `snapshot-<datum>-<uhrzeit>`.
 
 Zuerst wird die Welt gespeichert. Dann pausiert das automatische Speichern, während die Dateien im Hintergrund

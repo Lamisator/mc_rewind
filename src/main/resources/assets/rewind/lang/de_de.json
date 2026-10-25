@@ -33,13 +33,13 @@
   "rewind.screen.name_hint": "Name (optional)",
   "rewind.screen.description": "Beschreibung",
   "rewind.screen.description_hint": "Beschreibung (optional)",
-  "rewind.screen.save": "Jetzt speichern",
+  "rewind.screen.save": "Speichern",
   "rewind.screen.restore": "Laden",
   "rewind.screen.delete": "Löschen",
   "rewind.screen.sure": "Sicher?",
   "rewind.screen.waiting": "Frage den Server ...",
   "rewind.screen.busy": "arbeite ...",
-  "rewind.screen.empty": "Noch keine Snapshots. Gib einen Namen ein und drück „Jetzt speichern“.",
+  "rewind.screen.empty": "Noch keine Snapshots. Gib einen Namen ein und drück „Speichern“.",
   "rewind.screen.auto_on": "Automatisch: alle %s min",
   "rewind.screen.auto_off": "Automatische Snapshots: aus"
 }
